@@ -21,7 +21,7 @@ import static javax.crypto.Cipher.SECRET_KEY;
 public class JwtService {
     private final String Secret_key;
 
-    public JwtService(@Value("&{SECRET_KEY}")String secret_key) {
+    public JwtService(@Value("${SECRET_KEY}")String secret_key) {
         Secret_key = secret_key;
     }
 
@@ -35,7 +35,7 @@ public class JwtService {
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 

@@ -15,14 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final userService UserService;
 
-    public AuthService(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtService jwtService, PasswordEncoder passwordEncoder, userService userService) {
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, PasswordEncoder passwordEncoder, userService userService) {
         this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         UserService = userService;
@@ -42,6 +40,7 @@ public class AuthService {
 
     public AuthenticationResponse signUp(SignUpModel signUpModel){
         UserModel userModel = new UserModel();
+        userModel.setName(signUpModel.getNome());
         userModel.setUsername(signUpModel.getUsername());
         userModel.setPassword(passwordEncoder.encode(signUpModel.getPassword()));
         userModel.setRole(Role.USER);
