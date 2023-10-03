@@ -1,5 +1,6 @@
 package esempio_security.esempio_security.services;
 
+import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,5 +19,9 @@ public class userService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Username " +
                 "not found"));
+    }
+
+    public UserModel saveUser(UserModel userModel){
+        return this.userRepository.save(userModel);
     }
 }
