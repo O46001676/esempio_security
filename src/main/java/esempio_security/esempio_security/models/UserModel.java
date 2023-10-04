@@ -1,24 +1,33 @@
 package esempio_security.esempio_security.models;
-
 import esempio_security.esempio_security.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.Check;
+import org.hibernate.mapping.Constraint;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
 
 //una classe che implementa l'interfaccia UserDetails ereditando diversi metodi
 @Entity
+@Table(name = "Users")
 public class UserModel implements UserDetails {
     //attributi
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(unique = true)
     private String username;
+
+    @Column
     private String password;
+    @Column
+    @Size(max = 19)
     private String name;
 
     @Enumerated(EnumType.STRING) //enum

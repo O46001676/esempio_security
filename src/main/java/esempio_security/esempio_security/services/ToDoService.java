@@ -5,11 +5,12 @@ import esempio_security.esempio_security.dto.ToDoRequestUpdate;
 import esempio_security.esempio_security.models.ToDoModel;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.repositories.ToDoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Transactional
 @Service
 public class ToDoService {
     private final ToDoRepository toDoRepository;
@@ -43,6 +44,8 @@ public class ToDoService {
         if(todos.isEmpty()){
             throw new IllegalArgumentException("Errore, nessun todo trovato con questo id");
         }
+        todos.get().setTodo(toDo.getTodo());
+        todos.get().setExpiryDate(toDo.getExpiryDate());
         return this.toDoRepository.save(todos.get());
     }
 

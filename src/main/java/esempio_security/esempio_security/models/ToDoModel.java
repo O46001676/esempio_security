@@ -1,24 +1,27 @@
 package esempio_security.esempio_security.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.Check;
 
+import java.lang.annotation.Target;
 import java.time.LocalDate;
-
+@Table(name = "Todos")
 @Entity
 public class ToDoModel {
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column
+    @Size(min = 5)
     private String todo;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate expiryDate;
 
+    @JoinColumn(name = "userId")
     @ManyToOne
     private UserModel userModel;
 

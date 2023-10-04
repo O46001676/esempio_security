@@ -45,7 +45,7 @@ public class ToDoController {
         }
     }
 
-    //SISTEMARE
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ToDoModel> removeToDo(@PathVariable Long id, UsernamePasswordAuthenticationToken user){
         UserModel userModel = (UserModel) user.getPrincipal();
