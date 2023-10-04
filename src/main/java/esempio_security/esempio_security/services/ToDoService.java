@@ -58,6 +58,7 @@ public class ToDoService {
        PageRequest pages = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
        Page<ToDoModel> todos = toDoRepository.getAllByUserModel(userModel,pages);
        return todos;
+
    }
 
 }

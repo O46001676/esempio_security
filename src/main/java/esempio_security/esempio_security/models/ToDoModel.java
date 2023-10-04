@@ -15,7 +15,7 @@ public class ToDoModel {
     private Long id;
 
     @Column
-    @Size(min = 5)
+    @Size(min = 2)
     private String todo;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
