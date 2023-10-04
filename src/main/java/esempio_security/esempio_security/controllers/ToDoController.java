@@ -45,6 +45,7 @@ public class ToDoController {
         }
     }
 
+    //SISTEMARE
     @DeleteMapping("/{id}")
     public ResponseEntity<ToDoModel> removeToDo(@PathVariable Long id, UsernamePasswordAuthenticationToken user){
         UserModel userModel = (UserModel) user.getPrincipal();
@@ -64,6 +65,7 @@ public class ToDoController {
         }
     }
 
+    //SISTEMARE
     @PutMapping
     public ResponseEntity<ToDoModel> updateToDo (@RequestBody ToDoRequestUpdate toDo,
                                                  UsernamePasswordAuthenticationToken user) {
