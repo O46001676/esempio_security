@@ -5,6 +5,10 @@ import esempio_security.esempio_security.dto.ToDoRequestUpdate;
 import esempio_security.esempio_security.models.ToDoModel;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.services.ToDoService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,10 +27,16 @@ public class ToDoController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<ToDoModel>> getToDos(UsernamePasswordAuthenticationToken user) {
+    public ResponseEntity<Iterable<ToDoModel>> getToDos(
+            UsernamePasswordAuthenticationToken user,
+            @PageableDefault(page = 0, size = 20)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "expiryDate", direction = Sort.Direction.DESC)
+            }
+            ) Pageable pageable) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
-            Iterable<ToDoModel> toDos = this.toDoService.getAllByUserModel(userModel);
+            Iterable<ToDoModel> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
             return new ResponseEntity<>(toDos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -37,7 +47,7 @@ public class ToDoController {
     public ResponseEntity<ToDoModel> addToDo(@RequestBody ToDoRequest toDo, UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         try {
-            ToDoModel toDoAdded = this.toDoService.addToDo(toDo,userModel);
+            ToDoModel toDoAdded = this.toDoService.addToDo(toDo, userModel);
             return new ResponseEntity<>(toDoAdded, HttpStatus.CREATED);
 
         } catch (Exception e) {
@@ -47,31 +57,30 @@ public class ToDoController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ToDoModel> removeToDo(@PathVariable Long id, UsernamePasswordAuthenticationToken user){
+    public ResponseEntity<ToDoModel> removeToDo(@PathVariable Long id, UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
-        this.toDoService.deleteByIdAndUserModel(id,userModel);
+        this.toDoService.deleteByIdAndUserModel(id, userModel);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getToDoByIdAndUserModel(@PathVariable Long id, UsernamePasswordAuthenticationToken user){
+    public ResponseEntity getToDoByIdAndUserModel(@PathVariable Long id, UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
-        Optional<ToDoModel> toDo = this.toDoService.getToDoByIdAndUserModel(id,userModel);
-        if(toDo.isEmpty()){
-            return new ResponseEntity<>("Non esiste!",HttpStatus.NOT_FOUND);
-        }
-        else {
-            return new ResponseEntity<>(toDo.get(),HttpStatus.OK);
+        Optional<ToDoModel> toDo = this.toDoService.getToDoByIdAndUserModel(id, userModel);
+        if (toDo.isEmpty()) {
+            return new ResponseEntity<>("Non esiste!", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(toDo.get(), HttpStatus.OK);
         }
     }
 
     //SISTEMARE
     @PutMapping
-    public ResponseEntity<ToDoModel> updateToDo (@RequestBody ToDoRequestUpdate toDo,
-                                                 UsernamePasswordAuthenticationToken user) {
+    public ResponseEntity<ToDoModel> updateToDo(@RequestBody ToDoRequestUpdate toDo,
+                                                UsernamePasswordAuthenticationToken user) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
-            ToDoModel toDoAdded = this.toDoService.updateToDo(toDo,userModel);
+            ToDoModel toDoAdded = this.toDoService.updateToDo(toDo, userModel);
             return new ResponseEntity<>(toDoAdded, HttpStatus.OK);
 
         } catch (Exception e) {

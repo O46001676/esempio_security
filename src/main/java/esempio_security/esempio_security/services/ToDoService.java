@@ -6,9 +6,13 @@ import esempio_security.esempio_security.models.ToDoModel;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.repositories.ToDoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 @Transactional
 @Service
@@ -48,5 +52,12 @@ public class ToDoService {
         todos.get().setExpiryDate(toDo.getExpiryDate());
         return this.toDoRepository.save(todos.get());
     }
+
+   public Page<ToDoModel> getAllByUserModel(UserModel userModel, Pageable pageable){
+
+       PageRequest pages = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+       Page<ToDoModel> todos = toDoRepository.getAllByUserModel(userModel,pages);
+       return todos;
+   }
 
 }
