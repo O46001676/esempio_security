@@ -33,6 +33,8 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers("/auth/**")
                         .permitAll()
+                        .requestMatchers("/error")
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
         )
