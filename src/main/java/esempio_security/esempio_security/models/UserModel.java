@@ -9,18 +9,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+//una classe che implementa l'interfaccia UserDetails ereditando diversi metodi
 @Entity
 public class UserModel implements UserDetails {
+    //attributi
     @Id
-            @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     private String username;
     private String password;
     private String name;
-    @Enumerated(EnumType.STRING)
+
+    @Enumerated(EnumType.STRING) //enum
     private Role role;
 
+    //costruttore vuoto e pieno
     public UserModel() {
     }
 
@@ -45,6 +49,7 @@ public class UserModel implements UserDetails {
         return username;
     }
 
+    //settare i seguenti metodi ereditati a return true
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -69,6 +74,7 @@ public class UserModel implements UserDetails {
         this.username = username;
     }
 
+    //cambiare il tipo di return per restituire una lista di ruoli
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

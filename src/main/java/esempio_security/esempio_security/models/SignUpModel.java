@@ -1,6 +1,7 @@
 package esempio_security.esempio_security.models;
 
 public class SignUpModel {
+    //attributi, costruttore , getters e setters
     private String nome;
     private String username;
     private String password;

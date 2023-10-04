@@ -1,6 +1,7 @@
 package esempio_security.esempio_security.models;
 
 public class AuthenticationResponse {
+    //contiene il token ed il suo costruttore/getter/setter
     String token;
 
     public AuthenticationResponse() {

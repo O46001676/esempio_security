@@ -21,6 +21,7 @@ public class AuthController {
         this.authService = authService;
     }
 
+    //indirizzamento login
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginModel loginModel){
         try{
@@ -30,6 +31,7 @@ public class AuthController {
         }
     }
 
+    //indirizzamento signup
     @PostMapping("/signup")
     public ResponseEntity<AuthenticationResponse> signup(@RequestBody SignUpModel signUpModel){
         try{

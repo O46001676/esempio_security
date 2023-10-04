@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    //GLI ATTRIBUTI ED IL COSTRUTTORE SONO DA INSERIRE DOPO AVER REALIZZATO IL JwtAuthenticationFilter
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
@@ -23,6 +24,8 @@ public class SecurityConfiguration {
         this.authenticationProvider = authenticationProvider;
     }
 
+    //Creare il seguente bean e interromperlo ad un certo punto *
+    //metodo che permette di defire quali permessi applicare in base all'indirizzo di riferimento
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorizeConfig->
@@ -33,9 +36,22 @@ public class SecurityConfiguration {
                         .anyRequest()
                         .authenticated()
         )
+                // PUNTO DI INTERRUZIONE DA CONTINUARE DOPO AVER REALIZZATO IL JwtAuthenticationFilter *
+
+                //aggiungi il filtro creato (jwtAuthenticationFilter prima degli altri filtri) e verifica che i permessi
+                //concessi siano giusti basandosi su username e password forniti
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+                //questa configurazione indica a Spring Security di gestire l'autenticazione e l'autorizzazione in modo
+                // "stateless", senza creare o gestire sessioni utente.
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                //questa configurazione indica a Spring Security di utilizzare un provider di autenticazione specifico
+                // (authenticationProvider) per gestire il processo di autenticazione all'interno dell'applicazione
                 .authenticationProvider(authenticationProvider)
+
+                //disabilita la protezione CSRF CSRF è una misura di sicurezza importante per prevenire attacchi che
+                // sfruttano l'autenticazione dell'utente per compiere azioni non autorizzate
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
