@@ -1,6 +1,7 @@
 package esempio_security.esempio_security.models;
 import esempio_security.esempio_security.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Check;
 import org.hibernate.mapping.Constraint;
@@ -30,6 +31,13 @@ public class UserModel implements UserDetails {
     @Size(max = 19)
     private String name;
 
+    @Column
+    private String cognome;
+
+    @Column(unique = true)
+    @Email
+    private String email;
+
     @Enumerated(EnumType.STRING) //enum
     private Role role;
 
@@ -37,12 +45,30 @@ public class UserModel implements UserDetails {
     public UserModel() {
     }
 
-    public UserModel(Long id, String username, String password, String name, Role role) {
+    public UserModel(Long id, String username, String password, String name, String cognome, String email, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
+        this.cognome = cognome;
+        this.email = email;
         this.role = role;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {

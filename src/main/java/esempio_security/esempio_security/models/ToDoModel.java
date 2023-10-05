@@ -25,14 +25,25 @@ public class ToDoModel {
     @ManyToOne
     private UserModel userModel;
 
+    @Column
+    private boolean done;
     public ToDoModel() {
     }
 
-    public ToDoModel(Long id, String todo, LocalDate expiryDate, UserModel userModel) {
+    public ToDoModel(Long id, String todo, LocalDate expiryDate, UserModel userModel, boolean done) {
         this.id = id;
         this.todo = todo;
         this.expiryDate = expiryDate;
         this.userModel = userModel;
+        this.done = done;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     public Long getId() {

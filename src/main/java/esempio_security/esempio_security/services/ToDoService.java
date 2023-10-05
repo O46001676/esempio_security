@@ -67,6 +67,7 @@ public class ToDoService {
 
         todo.setTodo(toDo.getTodo());
         todo.setExpiryDate(toDo.getExpiryDate());
+        todo.setDone(toDo.isDone());
         ToDoModel todoUpdated = this.toDoRepository.save(todo);
         return modelMapper.map(todoUpdated, ToDoResponse.class);
     }

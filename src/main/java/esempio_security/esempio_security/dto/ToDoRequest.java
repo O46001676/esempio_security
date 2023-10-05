@@ -2,6 +2,7 @@ package esempio_security.esempio_security.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import esempio_security.esempio_security.models.ToDoModel;
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
@@ -13,12 +14,24 @@ public class ToDoRequest {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate expiryDate;
 
+
+    private boolean done;
+
     public ToDoRequest() {
     }
 
-    public ToDoRequest(String todo, LocalDate expiryDate) {
+    public ToDoRequest(String todo, LocalDate expiryDate, boolean done) {
         this.todo = todo;
         this.expiryDate = expiryDate;
+        this.done = done;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     public String getTodo() {

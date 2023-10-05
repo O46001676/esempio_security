@@ -9,13 +9,24 @@ public class ToDoRequestUpdate {
     private Long id;
     private String todo;
 
+    private boolean done;
+
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate expiryDate;
 
-    public ToDoRequestUpdate(Long id, String todo, LocalDate expiryDate) {
+    public ToDoRequestUpdate(Long id, String todo, boolean done, LocalDate expiryDate) {
         this.id = id;
         this.todo = todo;
+        this.done = done;
         this.expiryDate = expiryDate;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     public Long getId() {
