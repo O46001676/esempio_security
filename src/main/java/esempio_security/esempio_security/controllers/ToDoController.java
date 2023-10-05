@@ -2,9 +2,11 @@ package esempio_security.esempio_security.controllers;
 
 import esempio_security.esempio_security.dto.ToDoRequest;
 import esempio_security.esempio_security.dto.ToDoRequestUpdate;
+import esempio_security.esempio_security.dto.ToDoResponse;
 import esempio_security.esempio_security.models.ToDoModel;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.services.ToDoService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -27,16 +29,16 @@ public class ToDoController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<ToDoModel>> getToDos(
+    public ResponseEntity<Page<ToDoResponse>> getToDos(
             UsernamePasswordAuthenticationToken user,
-            @PageableDefault(page = 0, size = 20)
+            @PageableDefault(page = 0, size = 2)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "expiryDate", direction = Sort.Direction.DESC)
             }
             ) Pageable pageable) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
-            Iterable<ToDoModel> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
+            Page<ToDoResponse> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
             return new ResponseEntity<>(toDos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -44,10 +46,11 @@ public class ToDoController {
     }
 
     @PostMapping
-    public ResponseEntity<ToDoModel> addToDo(@RequestBody ToDoRequest toDo, UsernamePasswordAuthenticationToken user) {
+    public ResponseEntity<ToDoResponse> addToDo(@RequestBody ToDoRequest toDo,
+                                               UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         try {
-            ToDoModel toDoAdded = this.toDoService.addToDo(toDo, userModel);
+            ToDoResponse toDoAdded = this.toDoService.addToDo(toDo, userModel);
             return new ResponseEntity<>(toDoAdded, HttpStatus.CREATED);
 
         } catch (Exception e) {
@@ -64,23 +67,19 @@ public class ToDoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getToDoByIdAndUserModel(@PathVariable Long id, UsernamePasswordAuthenticationToken user) {
+    public ResponseEntity<ToDoResponse> getToDoByIdAndUserModel(@PathVariable Long id, UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
-        Optional<ToDoModel> toDo = this.toDoService.getToDoByIdAndUserModel(id, userModel);
-        if (toDo.isEmpty()) {
-            return new ResponseEntity<>("Non esiste!", HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(toDo.get(), HttpStatus.OK);
-        }
+        ToDoResponse toDo = this.toDoService.getToDoByIdAndUserModel(id, userModel);
+        return new ResponseEntity<>(toDo, HttpStatus.OK);
+
     }
 
-    //SISTEMARE
     @PutMapping
-    public ResponseEntity<ToDoModel> updateToDo(@RequestBody ToDoRequestUpdate toDo,
+    public ResponseEntity<ToDoResponse> updateToDo(@RequestBody ToDoRequestUpdate toDo,
                                                 UsernamePasswordAuthenticationToken user) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
-            ToDoModel toDoAdded = this.toDoService.updateToDo(toDo, userModel);
+            ToDoResponse toDoAdded = this.toDoService.updateToDo(toDo, userModel);
             return new ResponseEntity<>(toDoAdded, HttpStatus.OK);
 
         } catch (Exception e) {

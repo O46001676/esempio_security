@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,7 +21,7 @@ public interface ToDoRepository extends JpaRepository<ToDoModel,Long>, PagingAnd
 
     Optional<ToDoModel> getToDoByIdAndUserModel(Long id, UserModel userModel);
 
-    Iterable<ToDoModel> getAllByUserModel(UserModel userModel);
+    List<ToDoModel> getAllByUserModel(UserModel userModel);
 
     Page<ToDoModel> getAllByUserModel(UserModel userModel, Pageable pageable);
 

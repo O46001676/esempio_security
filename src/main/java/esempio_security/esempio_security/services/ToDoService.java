@@ -2,15 +2,18 @@ package esempio_security.esempio_security.services;
 
 import esempio_security.esempio_security.dto.ToDoRequest;
 import esempio_security.esempio_security.dto.ToDoRequestUpdate;
+import esempio_security.esempio_security.dto.ToDoResponse;
 import esempio_security.esempio_security.models.ToDoModel;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.repositories.ToDoRepository;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,46 +21,60 @@ import java.util.Optional;
 @Service
 public class ToDoService {
     private final ToDoRepository toDoRepository;
+    private final ModelMapper modelMapper;
 
-    public ToDoService(ToDoRepository toDoRepository) {
+    public ToDoService(ToDoRepository toDoRepository, ModelMapper modelMapper) {
         this.toDoRepository = toDoRepository;
+        this.modelMapper = modelMapper;
+
     }
 
-    public ToDoModel addToDo(ToDoRequest toDo, UserModel user) {
-        ToDoModel toDoModel = new ToDoModel();
+    public ToDoResponse addToDo(ToDoRequest toDo, UserModel user) {
+        //ALTERNATIVA COMMENTATA
+       /* ToDoModel toDoModel = new ToDoModel();
         toDoModel.setTodo(toDo.getTodo());
         toDoModel.setExpiryDate(toDo.getExpiryDate());
-        toDoModel.setUserModel(user);
-        return this.toDoRepository.save(toDoModel);
+        toDoModel.setUserModel(user);*/
+
+        ToDoModel todo2 = modelMapper.map(toDo, ToDoModel.class);
+        todo2.setUserModel(user);
+        ToDoModel added = this.toDoRepository.save(todo2);
+        return modelMapper.map(added, ToDoResponse.class);
     }
 
     public void deleteByIdAndUserModel(Long id, UserModel user ){
         this.toDoRepository.deleteByIdAndUserModel(id,user);
     }
 
-    public Iterable<ToDoModel> getAllByUserModel(UserModel userModel) {
-        return this.toDoRepository.getAllByUserModel(userModel);
+    public List<ToDoResponse> getAllByUserModel(UserModel userModel) {
+        List<ToDoModel> toDoModels = this.toDoRepository.getAllByUserModel(userModel);
+        return toDoModels.stream().map(todo -> modelMapper.map(todo,ToDoResponse.class)).toList();
     }
 
-    public Optional<ToDoModel> getToDoByIdAndUserModel(Long id, UserModel userModel){
-        return this.toDoRepository.getToDoByIdAndUserModel(id, userModel);
-    }
+    public ToDoResponse getToDoByIdAndUserModel(Long id, UserModel userModel){
 
-    public ToDoModel updateToDo(ToDoRequestUpdate toDo, UserModel userModel){
-        Optional<ToDoModel> todos = getToDoByIdAndUserModel(toDo.getId(),userModel);
-        if(todos.isEmpty()){
-            throw new IllegalArgumentException("Errore, nessun todo trovato con questo id");
+        Optional<ToDoModel> toDoModel = this.toDoRepository.getToDoByIdAndUserModel(id,userModel);
+        if(toDoModel.isEmpty()){
+            throw new NullPointerException("ToDo non trovato");
         }
-        todos.get().setTodo(toDo.getTodo());
-        todos.get().setExpiryDate(toDo.getExpiryDate());
-        return this.toDoRepository.save(todos.get());
+        return modelMapper.map(toDoModel.get(), ToDoResponse.class);
     }
 
-   public Page<ToDoModel> getAllByUserModel(UserModel userModel, Pageable pageable){
+    public ToDoResponse updateToDo(ToDoRequestUpdate toDo, UserModel userModel){
+        ToDoModel todo =
+                this.toDoRepository.getToDoByIdAndUserModel(toDo.getId(),userModel)
+                        .orElseThrow(()->new NullPointerException("ToDo non trovato"));
 
+        todo.setTodo(toDo.getTodo());
+        todo.setExpiryDate(toDo.getExpiryDate());
+        ToDoModel todoUpdated = this.toDoRepository.save(todo);
+        return modelMapper.map(todoUpdated, ToDoResponse.class);
+    }
+
+   public Page<ToDoResponse> getAllByUserModel(UserModel userModel, Pageable pageable){
        PageRequest pages = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
        Page<ToDoModel> todos = toDoRepository.getAllByUserModel(userModel,pages);
-       return todos;
+       return todos.map(todo->modelMapper.map(todo,ToDoResponse.class));
 
    }
 
