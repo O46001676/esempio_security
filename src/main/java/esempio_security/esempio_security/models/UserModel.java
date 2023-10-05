@@ -3,6 +3,7 @@ import esempio_security.esempio_security.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Check;
 import org.hibernate.mapping.Constraint;
@@ -24,19 +25,24 @@ public class UserModel implements UserDetails {
     Long id;
 
     @Column(unique = true)
+    @NotBlank
     private String username;
 
     @Column
-        private String password;
+    @NotBlank
+    private String password;
     @Column
     @Size(max = 19)
+    @NotBlank
     private String name;
 
     @Column
+    @NotBlank
     private String cognome;
 
     @Column(unique = true)
     @Email
+    @NotNull
     private String email;
 
     @Enumerated(EnumType.STRING) //enum
