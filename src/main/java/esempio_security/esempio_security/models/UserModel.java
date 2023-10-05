@@ -24,23 +24,18 @@ public class UserModel implements UserDetails {
     Long id;
 
     @Column(unique = true)
-    @NotBlank
     private String username;
 
     @Column
-    @NotBlank
-    private String password;
+        private String password;
     @Column
-    @NotBlank
     @Size(max = 19)
     private String name;
 
     @Column
-    @NotBlank
     private String cognome;
 
     @Column(unique = true)
-    @NotBlank
     @Email
     private String email;
 

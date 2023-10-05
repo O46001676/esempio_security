@@ -42,6 +42,8 @@ public class AuthService {
         userModel.setName(signUpModel.getNome());
         userModel.setUsername(signUpModel.getUsername());
         userModel.setPassword(passwordEncoder.encode(signUpModel.getPassword()));
+        userModel.setCognome(signUpModel.getCognome());
+        userModel.setEmail(signUpModel.getEmail());
         userModel.setRole(Role.USER);
 
         UserModel userNew = this.UserService.saveUser(userModel);

@@ -7,10 +7,31 @@ public class SignUpModel {
     private String username;
     private String password;
 
-    public SignUpModel(String nome, String username, String password) {
+    private String cognome;
+    private String email;
+
+    public SignUpModel(String nome, String username, String password, String cognome, String email) {
         this.nome = nome;
         this.username = username;
         this.password = password;
+        this.cognome = cognome;
+        this.email = email;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNome() {

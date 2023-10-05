@@ -16,19 +16,15 @@ public class ToDoModel {
     private Long id;
 
     @Column
-    @NotBlank
     private String todo;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
-    @NotBlank
     private LocalDate expiryDate;
 
     @JoinColumn(name = "userId")
-    @ManyToOne
     private UserModel userModel;
 
     @Column
-    @NotBlank
     private boolean done;
     public ToDoModel() {
     }
