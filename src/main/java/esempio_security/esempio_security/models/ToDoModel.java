@@ -2,6 +2,7 @@ package esempio_security.esempio_security.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Check;
 
@@ -15,10 +16,11 @@ public class ToDoModel {
     private Long id;
 
     @Column
-    @Size(min = 2)
+    @NotBlank
     private String todo;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
+    @NotBlank
     private LocalDate expiryDate;
 
     @JoinColumn(name = "userId")
@@ -26,6 +28,7 @@ public class ToDoModel {
     private UserModel userModel;
 
     @Column
+    @NotBlank
     private boolean done;
     public ToDoModel() {
     }
