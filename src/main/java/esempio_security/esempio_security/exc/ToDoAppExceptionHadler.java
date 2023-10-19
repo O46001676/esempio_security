@@ -16,9 +16,8 @@ public class ToDoAppExceptionHadler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String,String> handlerException(MethodArgumentNotValidException ex){
         Map<String,String> errorMap = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(fieldError -> {errorMap.put(fieldError.getField(),
-                fieldError.getDefaultMessage());
-        });
+        ex.getBindingResult().getFieldErrors().forEach(fieldError -> errorMap.put(fieldError.getField(),
+                fieldError.getDefaultMessage()));
         return errorMap;
     }
 

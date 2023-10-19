@@ -5,6 +5,8 @@ import esempio_security.esempio_security.models.ToDoModel;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -12,6 +14,7 @@ public class ToDoRequest {
     private String todo;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
+    @NotNull(message = "Inserire una data di nascita")
     private LocalDate expiryDate;
 
 

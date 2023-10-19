@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +55,10 @@ public class ToDoController {
             ToDoResponse toDoAdded = this.toDoService.addToDo(toDo, userModel);
             return new ResponseEntity<>(toDoAdded, HttpStatus.CREATED);
 
-        } catch (Exception e) {
+        }catch (HttpMessageNotReadableException e){
+            return new ResponseEntity<>("Data non valida", HttpStatus.I_AM_A_TEAPOT);
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -82,7 +86,6 @@ public class ToDoController {
             UserModel userModel = (UserModel) user.getPrincipal();
             ToDoResponse toDoAdded = this.toDoService.updateToDo(toDo, userModel);
             return new ResponseEntity<>(toDoAdded, HttpStatus.OK);
-
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
