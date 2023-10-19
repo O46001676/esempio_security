@@ -1,6 +1,7 @@
 package esempio_security.esempio_security.services;
 
 import esempio_security.esempio_security.enums.Role;
+import esempio_security.esempio_security.exc.DatiNonValidiException;
 import esempio_security.esempio_security.models.AuthenticationResponse;
 import esempio_security.esempio_security.models.LoginModel;
 import esempio_security.esempio_security.models.SignUpModel;
@@ -47,6 +48,9 @@ public class AuthService {
         userModel.setRole(Role.USER);
 
         UserModel userNew = this.UserService.saveUser(userModel);
+        if(userNew == null){
+            throw new DatiNonValidiException("User non inserito, già presente in db!");
+        }
         String jwtToken = this.jwtService.generateToken(userNew);
         return new AuthenticationResponse(jwtToken);
     }
