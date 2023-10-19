@@ -15,13 +15,24 @@ public class ToDoResponse {
 
     private boolean done;
 
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public ToDoResponse() {
     }
 
-    public ToDoResponse(String todo, LocalDate expiryDate, boolean done) {
+    public ToDoResponse(String todo, LocalDate expiryDate, boolean done, int id) {
         this.todo = todo;
         this.expiryDate = expiryDate;
         this.done = done;
+        this.id = id;
     }
 
     public String getTodo() {
