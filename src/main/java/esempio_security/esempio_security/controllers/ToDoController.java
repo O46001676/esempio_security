@@ -6,6 +6,7 @@ import esempio_security.esempio_security.dto.ToDoResponse;
 import esempio_security.esempio_security.models.ToDoModel;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.services.ToDoService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,7 +30,7 @@ public class ToDoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ToDoResponse>> getToDos(
+    public ResponseEntity<?> getToDos(
             UsernamePasswordAuthenticationToken user,
             @PageableDefault(page = 0, size = 2)
             @SortDefault.SortDefaults({
@@ -41,12 +42,12 @@ public class ToDoController {
             Page<ToDoResponse> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
             return new ResponseEntity<>(toDos, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> addToDo(@RequestBody ToDoRequest toDo,
+    public ResponseEntity<?> addToDo(@Valid @RequestBody ToDoRequest toDo,
                                                UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         try {
@@ -60,7 +61,7 @@ public class ToDoController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ToDoModel> removeToDo(@PathVariable Long id, UsernamePasswordAuthenticationToken user) {
+    public ResponseEntity<ToDoModel> removeToDo(@Valid @PathVariable Long id, UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         this.toDoService.deleteByIdAndUserModel(id, userModel);
         return ResponseEntity.noContent().build();
@@ -75,7 +76,7 @@ public class ToDoController {
     }
 
     @PutMapping
-    public ResponseEntity<ToDoResponse> updateToDo(@RequestBody ToDoRequestUpdate toDo,
+    public ResponseEntity<?> updateToDo(@Valid @RequestBody ToDoRequestUpdate toDo,
                                                 UsernamePasswordAuthenticationToken user) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
@@ -83,7 +84,7 @@ public class ToDoController {
             return new ResponseEntity<>(toDoAdded, HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

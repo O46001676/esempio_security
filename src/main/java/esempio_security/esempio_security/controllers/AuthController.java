@@ -7,6 +7,7 @@ import esempio_security.esempio_security.models.SignUpModel;
 import esempio_security.esempio_security.services.AuthService;
 import esempio_security.esempio_security.services.JwtService;
 import esempio_security.esempio_security.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,7 @@ public class AuthController {
 
     //indirizzamento login
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginModel loginModel) {
+    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginModel loginModel) {
         try {
             // Esegui l'autenticazione
             AuthenticationResponse authenticationResponse = this.authService.login(loginModel);
@@ -51,7 +52,7 @@ public class AuthController {
 
     //indirizzamento signup
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignUpModel signUpModel){
+    public ResponseEntity<?> signup(@Valid @RequestBody SignUpModel signUpModel){
         try{
             return new ResponseEntity<>(this.authService.signUp(signUpModel), HttpStatus.CREATED);
         }catch (Exception e){
