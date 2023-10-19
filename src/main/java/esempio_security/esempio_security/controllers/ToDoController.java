@@ -29,7 +29,7 @@ public class ToDoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ToDoResponse>> getToDos(
+    public ResponseEntity<?> getToDos(
             UsernamePasswordAuthenticationToken user,
             @PageableDefault(page = 0, size = 2)
             @SortDefault.SortDefaults({
@@ -41,7 +41,7 @@ public class ToDoController {
             Page<ToDoResponse> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
             return new ResponseEntity<>(toDos, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

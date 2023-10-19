@@ -29,7 +29,7 @@ public class ToDoModel {
     @Future(message = "La data di scadenza deve essere successiva a quella odierna")
     private LocalDate expiryDate;
 
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     @ManyToOne
     private UserModel userModel;
 
