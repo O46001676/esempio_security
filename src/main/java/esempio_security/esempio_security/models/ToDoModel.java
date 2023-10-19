@@ -20,7 +20,7 @@ public class ToDoModel {
 
     @Column
     @NotBlank
-    @Length(min = 5, max = 500)
+    @Length(min = 5, max = 500, message = "Il testo del toDo di minimo 5 caratteri")
     @Lob //testi anche lunghi
     private String todo;
 
