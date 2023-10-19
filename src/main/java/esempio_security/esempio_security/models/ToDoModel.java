@@ -2,10 +2,12 @@ package esempio_security.esempio_security.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Check;
+import org.hibernate.validator.constraints.Length;
 
 import java.lang.annotation.Target;
 import java.time.LocalDate;
@@ -18,11 +20,13 @@ public class ToDoModel {
 
     @Column
     @NotBlank
+    @Length(min = 5, max = 500)
     @Lob //testi anche lunghi
     private String todo;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     @NotNull
+    @Future(message = "La data di scadenza deve essere successiva a quella odierna")
     private LocalDate expiryDate;
 
     @JoinColumn(name = "userId")
@@ -30,7 +34,7 @@ public class ToDoModel {
     private UserModel userModel;
 
     @Column
-    private boolean done;
+    private boolean done = false;
     public ToDoModel() {
     }
 

@@ -46,7 +46,7 @@ public class ToDoController {
     }
 
     @PostMapping
-    public ResponseEntity<ToDoResponse> addToDo(@RequestBody ToDoRequest toDo,
+    public ResponseEntity<?> addToDo(@RequestBody ToDoRequest toDo,
                                                UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         try {
@@ -54,7 +54,7 @@ public class ToDoController {
             return new ResponseEntity<>(toDoAdded, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
