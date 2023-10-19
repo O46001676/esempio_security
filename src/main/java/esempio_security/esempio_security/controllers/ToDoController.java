@@ -42,12 +42,12 @@ public class ToDoController {
             Page<ToDoResponse> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
             return new ResponseEntity<>(toDos, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> addToDo( @Valid @RequestBody ToDoRequest toDo,
+    public ResponseEntity<?> addToDo(@Valid @RequestBody ToDoRequest toDo,
                                                UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         try {
