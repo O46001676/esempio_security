@@ -10,6 +10,7 @@ import esempio_security.esempio_security.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,18 +46,21 @@ public class AuthController {
                 // Altrimenti, restituisci una risposta di errore o vuota.
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
-        } catch (Exception e) {
+        }catch(BadCredentialsException e){
+            return new ResponseEntity<>("Credenziali errate!",HttpStatus.UNAUTHORIZED);
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     //indirizzamento signup
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignUpModel signUpModel){
+    public ResponseEntity<?> signup(@Valid @RequestBody SignUpModel signUpModel){
         try{
             return new ResponseEntity<>(this.authService.signUp(signUpModel), HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -25,7 +25,6 @@ public class ToDoModel {
     private String todo;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
-    @NotNull
     @Future(message = "La data di scadenza deve essere successiva a quella odierna")
     private LocalDate expiryDate;
 

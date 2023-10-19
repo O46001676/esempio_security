@@ -1,12 +1,15 @@
 package esempio_security.esempio_security.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 public class ToDoResponse {
+    @NotBlank(message = "Todo obbligatorio")
     private String todo;
-
+    @NotNull(message = "Inserire una data di nascita")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate expiryDate;
 
