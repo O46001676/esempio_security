@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Entity
 public class ToDoModel {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

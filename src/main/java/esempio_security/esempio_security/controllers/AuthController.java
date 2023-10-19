@@ -23,21 +23,30 @@ public class AuthController {
 
     //indirizzamento login
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginModel loginModel){
-        try{
-            return new ResponseEntity<>(this.authService.login(loginModel),HttpStatus.OK);
-        }catch (Exception e){
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginModel loginModel) {
+        try {
+            // Esegui l'autenticazione
+            AuthenticationResponse authenticationResponse = this.authService.login(loginModel);
+
+            if (authenticationResponse != null && authenticationResponse.getToken() != null) {
+                // Se l'autenticazione ha successo e il token è generato, restituiscilo come parte della risposta.
+                return new ResponseEntity<>(authenticationResponse, HttpStatus.OK);
+            } else {
+                // Altrimenti, restituisci una risposta di errore o vuota.
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     //indirizzamento signup
     @PostMapping("/signup")
-    public ResponseEntity<AuthenticationResponse> signup(@RequestBody SignUpModel signUpModel){
+    public ResponseEntity<?> signup(@RequestBody SignUpModel signUpModel){
         try{
             return new ResponseEntity<>(this.authService.signUp(signUpModel), HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Check;
 import org.hibernate.mapping.Constraint;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,23 +26,25 @@ public class UserModel implements UserDetails {
     Long id;
 
     @Column(unique = true)
+    @Length(min = 2, max = 19, message = "Il username deve essere compreso tra 2 e 19 caratteri")
     @NotBlank
     private String username;
 
     @Column
-    @NotBlank
+    @NotBlank(message = "Il campo deve essere necessariamente riempito")
     private String password;
     @Column
-    @Size(max = 19)
+    @Length(min = 2, max = 19, message = "Il nome deve essere compreso tra 2 e 19 caratteri")
     @NotBlank
     private String name;
 
     @Column
+    @Length(min = 2, max = 19, message = "Il cognome deve essere compreso tra 2 e 19 caratteri")
     @NotBlank
     private String cognome;
 
     @Column(unique = true)
-    @Email
+    @Email(message = "Il campo email deve essere una email")
     @NotNull
     private String email;
 
