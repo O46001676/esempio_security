@@ -1,10 +1,12 @@
 package esempio_security.esempio_security.services;
 
 import esempio_security.esempio_security.enums.Role;
+import esempio_security.esempio_security.exc.DatiNonValidiException;
 import esempio_security.esempio_security.models.AuthenticationResponse;
 import esempio_security.esempio_security.models.LoginModel;
 import esempio_security.esempio_security.models.SignUpModel;
 import esempio_security.esempio_security.models.UserModel;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,8 +47,17 @@ public class AuthService {
         userModel.setCognome(signUpModel.getCognome());
         userModel.setEmail(signUpModel.getEmail());
         userModel.setRole(Role.USER);
+        UserModel userNew;
 
-        UserModel userNew = this.UserService.saveUser(userModel);
+        try{
+            userNew = this.UserService.saveUser(userModel);
+        }catch(DataIntegrityViolationException ex){
+            throw new DatiNonValidiException("Dati già presenti nel database");
+        }
+
+        if(userNew == null){
+            throw new DatiNonValidiException("User non inserito!");
+        }
         String jwtToken = this.jwtService.generateToken(userNew);
         return new AuthenticationResponse(jwtToken);
     }
