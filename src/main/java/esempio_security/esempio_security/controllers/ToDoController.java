@@ -21,7 +21,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/todo")
-
 public class ToDoController {
     private final ToDoService toDoService;
 
