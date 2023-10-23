@@ -1,21 +1,25 @@
 package esempio_security.esempio_security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@org.springframework.context.annotation.Configuration
-public class Configuration {
-
+@Configuration
+public class CorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*");
+                registry
+                        .addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .exposedHeaders("*")
+                        .allowCredentials(false)
+                        .maxAge(-1);
             }
         };
     }
