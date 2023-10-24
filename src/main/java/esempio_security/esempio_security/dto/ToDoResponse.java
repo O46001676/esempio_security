@@ -10,7 +10,6 @@ public class ToDoResponse {
     @NotBlank(message = "Todo obbligatorio")
     private String todo;
     @NotNull(message = "Inserire una data di nascita")
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate expiryDate;
 
     private boolean done;

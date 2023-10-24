@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class ToDoRequest {
     private String todo;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
+
     @NotNull(message = "Inserire una data di nascita")
     private LocalDate expiryDate;
 

@@ -13,7 +13,6 @@ public class ToDoRequestUpdate {
     private String todo;
     private boolean done;
     @NotNull(message = "Inserire una data di nascita")
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate expiryDate;
 
     public ToDoRequestUpdate(Long id, String todo, boolean done, LocalDate expiryDate) {
