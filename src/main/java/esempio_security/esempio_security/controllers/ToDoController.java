@@ -32,7 +32,7 @@ public class ToDoController {
     @GetMapping
     public ResponseEntity<?> getToDos(
             UsernamePasswordAuthenticationToken user,
-            @PageableDefault(page = 0, size = 2)
+            @PageableDefault(page = 0, size = 10)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "expiryDate", direction = Sort.Direction.DESC)
             }
