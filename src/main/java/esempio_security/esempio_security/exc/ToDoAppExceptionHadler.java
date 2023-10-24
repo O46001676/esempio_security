@@ -1,17 +1,18 @@
 package esempio_security.esempio_security.exc;
 
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-
 public class ToDoAppExceptionHadler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String,String> handlerException(MethodArgumentNotValidException ex){
@@ -21,9 +22,14 @@ public class ToDoAppExceptionHadler {
         return errorMap;
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class})
+    @ExceptionHandler(DataIntegrityViolationException.class)
     public String handlerDuplicateEntryException(DataIntegrityViolationException ex){
         return "Dati già presenti nel database";
     }
+
+    @ExceptionHandler(JwtException.class)
+        public String errorJtwToken(JwtException ex){
+            return "Errore nel token JWT";
+        }
 
 }

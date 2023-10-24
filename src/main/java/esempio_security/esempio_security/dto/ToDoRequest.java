@@ -11,13 +11,10 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class ToDoRequest {
+    @NotNull(message = "Inserire il todo")
     private String todo;
-
-    @JsonFormat(pattern = "dd-MM-yyyy")
     @NotNull(message = "Inserire una data di nascita")
     private LocalDate expiryDate;
-
-
     private boolean done;
 
     public ToDoRequest() {

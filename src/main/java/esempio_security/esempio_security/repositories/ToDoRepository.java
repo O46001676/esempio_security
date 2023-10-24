@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 public interface ToDoRepository extends JpaRepository<ToDoModel,Long>, PagingAndSortingRepository<ToDoModel,Long> {
 
-    void deleteByIdAndUserModel(Long id, UserModel userModel);
+    int deleteByIdAndUserModel(Long id, UserModel userModel);
 
     Optional<ToDoModel> getToDoByIdAndUserModel(Long id, UserModel userModel);
 

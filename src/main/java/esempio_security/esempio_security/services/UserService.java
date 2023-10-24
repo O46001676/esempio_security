@@ -1,5 +1,6 @@
 package esempio_security.esempio_security.services;
 
+import esempio_security.esempio_security.exc.DatiNonValidiException;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,5 +30,9 @@ public class UserService implements UserDetailsService {
     //metodo per salvare un utente all'interno del database
     public UserModel saveUser(UserModel userModel){
         return this.userRepository.save(userModel);
+    }
+
+    public UserDetails findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new DatiNonValidiException("User non trovato!"));
     }
 }

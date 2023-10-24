@@ -18,6 +18,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -33,19 +34,24 @@ public class ToDoController {
     @GetMapping
     public ResponseEntity<?> getToDos(
             UsernamePasswordAuthenticationToken user,
-            @PageableDefault(page = 0, size = 2)
             @SortDefault.SortDefaults({
-                    @SortDefault(sort = "expiryDate", direction = Sort.Direction.DESC)
+                    @SortDefault(sort = "expiryDate", direction = Sort.Direction.ASC)
             }
             ) Pageable pageable) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
             Page<ToDoResponse> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
-            return new ResponseEntity<>(toDos, HttpStatus.OK);
+            List<ToDoResponse> response = toDos.stream().toList();
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+   /* @GetMapping("nopage")
+    public ResponseEntity<?> getAllToDosNoPagination(UsernamePasswordAuthenticationToken user){
+
+    }*/
 
     @PostMapping
     public ResponseEntity<?> addToDo(@Valid @RequestBody ToDoRequest toDo,
@@ -65,10 +71,15 @@ public class ToDoController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ToDoModel> removeToDo(@Valid @PathVariable Long id, UsernamePasswordAuthenticationToken user) {
+    public ResponseEntity<?> removeToDo(@Valid @PathVariable Long id, UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
-        this.toDoService.deleteByIdAndUserModel(id, userModel);
-        return ResponseEntity.noContent().build();
+        int nRowDeleted = this.toDoService.deleteByIdAndUserModel(id, userModel);
+        if(nRowDeleted == 1){
+            return new ResponseEntity<>("Todo eliminato con successo!", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Todo non trovato!", HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @GetMapping("/{id}")

@@ -38,12 +38,13 @@ public class ToDoService {
 
         ToDoModel todo2 = modelMapper.map(toDo, ToDoModel.class);
         todo2.setUserModel(user);
+        todo2.setDone(false);
         ToDoModel added = this.toDoRepository.save(todo2);
         return modelMapper.map(added, ToDoResponse.class);
     }
 
-    public void deleteByIdAndUserModel(Long id, UserModel user ){
-        this.toDoRepository.deleteByIdAndUserModel(id,user);
+    public int deleteByIdAndUserModel(Long id, UserModel user ){
+        return this.toDoRepository.deleteByIdAndUserModel(id,user);
     }
 
     public List<ToDoResponse> getAllByUserModel(UserModel userModel) {
@@ -73,7 +74,7 @@ public class ToDoService {
     }
 
    public Page<ToDoResponse> getAllByUserModel(UserModel userModel, Pageable pageable){
-       PageRequest pages = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+       PageRequest pages = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
        Page<ToDoModel> todos = toDoRepository.getAllByUserModel(userModel,pages);
        return todos.map(todo->modelMapper.map(todo,ToDoResponse.class));
 

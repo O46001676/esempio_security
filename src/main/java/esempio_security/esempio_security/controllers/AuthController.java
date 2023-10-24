@@ -38,8 +38,7 @@ public class AuthController {
 
             if (authenticationResponse != null
                     && authenticationResponse.getToken() != null
-                    && jwtService.isTokenValid(authenticationResponse.getToken(),
-                    userService.loadUserByUsername(loginModel.getUsername()))) {
+                    && jwtService.isTokenValid(authenticationResponse.getToken(), userService.findByEmail(loginModel.getEmail()))) {
                 // Se l'autenticazione ha successo e il token è generato, restituiscilo come parte della risposta.
                 return new ResponseEntity<>(authenticationResponse, HttpStatus.OK);
             } else {

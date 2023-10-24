@@ -18,24 +18,26 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final esempio_security.esempio_security.services.UserService UserService;
+    private final esempio_security.esempio_security.services.UserService userService;
 
     public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, PasswordEncoder passwordEncoder, esempio_security.esempio_security.services.UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
-        UserService = userService;
+        this.userService = userService;
     }
 
     public AuthenticationResponse login(LoginModel loginModel){
+        UserDetails userFoundByEmail = userService.findByEmail(loginModel.getEmail());
+
         this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginModel.getUsername(),
+                        userFoundByEmail.getUsername(),
                         loginModel.getPassword()
                 )
         );
-        UserDetails userModel = this.UserService.loadUserByUsername(loginModel.getUsername());
-        String jwtToken = this.jwtService.generateToken(userModel);
+        UserDetails user = this.userService.loadUserByUsername(userFoundByEmail.getUsername());
+        String jwtToken = this.jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
 
@@ -50,7 +52,7 @@ public class AuthService {
         UserModel userNew;
 
         try{
-            userNew = this.UserService.saveUser(userModel);
+            userNew = this.userService.saveUser(userModel);
         }catch(DataIntegrityViolationException ex){
             throw new DatiNonValidiException("Dati già presenti nel database");
         }

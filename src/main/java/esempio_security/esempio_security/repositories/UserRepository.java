@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserModel,Long> {
     //aggiungere questo optional che restituisce una "scatola" che può o non può contenere un UserModel
     Optional<UserModel> findByUsername(String username);
+
+    Optional<UserModel> findByEmail(String email);
 }
