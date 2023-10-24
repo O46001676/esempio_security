@@ -1,11 +1,6 @@
 package esempio_security.esempio_security.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import esempio_security.esempio_security.models.ToDoModel;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;

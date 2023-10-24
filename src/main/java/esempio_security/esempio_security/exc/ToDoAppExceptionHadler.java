@@ -2,7 +2,6 @@ package esempio_security.esempio_security.exc;
 
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
