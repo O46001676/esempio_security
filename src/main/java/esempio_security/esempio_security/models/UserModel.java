@@ -5,6 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
 import org.hibernate.mapping.Constraint;
 import org.hibernate.validator.constraints.Length;
@@ -19,6 +23,10 @@ import java.util.List;
 //una classe che implementa l'interfaccia UserDetails ereditando diversi metodi
 @Entity
 @Table(name = "Users")
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserModel implements UserDetails {
     //attributi
     @Id
@@ -51,48 +59,6 @@ public class UserModel implements UserDetails {
     @Enumerated(EnumType.STRING) //enum
     private Role role;
 
-    //costruttore vuoto e pieno
-    public UserModel() {
-    }
-
-    public UserModel(Long id, String username, String password, String name, String cognome, String email, Role role) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.cognome = cognome;
-        this.email = email;
-        this.role = role;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
 
     //settare i seguenti metodi ereditati a return true
     @Override
@@ -122,31 +88,7 @@ public class UserModel implements UserDetails {
     //cambiare il tipo di return per restituire una lista di ruoli
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getAuthorities();
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

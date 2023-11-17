@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +26,7 @@ public interface ToDoRepository extends JpaRepository<ToDoModel,Long>, PagingAnd
     List<ToDoModel> getAllByUserModel(UserModel userModel);
 
     Page<ToDoModel> getAllByUserModel(UserModel userModel, Pageable pageable);
+
+    Page<ToDoModel> getAllByUserModelAndExpiryDateAfter(UserModel userModel, Pageable pageable, LocalDate currentDate);
 
 }

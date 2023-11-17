@@ -9,6 +9,7 @@ import esempio_security.esempio_security.models.UserModel;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,13 +43,22 @@ public class AuthService {
     }
 
     public AuthenticationResponse signUp(SignUpModel signUpModel){
-        UserModel userModel = new UserModel();
+       /* UserModel userModel = new UserModel();
         userModel.setName(signUpModel.getNome());
         userModel.setUsername(signUpModel.getUsername());
         userModel.setPassword(passwordEncoder.encode(signUpModel.getPassword()));
         userModel.setCognome(signUpModel.getCognome());
         userModel.setEmail(signUpModel.getEmail());
-        userModel.setRole(Role.USER);
+        userModel.setRole(signUpModel.getRole());*/
+
+        UserModel userModel = UserModel.builder()
+                .name(signUpModel.getNome())
+                .cognome(signUpModel.getCognome())
+                .username(signUpModel.getUsername())
+                .password(signUpModel.getPassword())
+                .email(signUpModel.getEmail())
+                .role(signUpModel.getRole())
+                .build();
         UserModel userNew;
 
         try{

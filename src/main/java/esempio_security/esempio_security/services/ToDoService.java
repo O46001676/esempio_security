@@ -15,8 +15,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Transactional
 @Service
 public class ToDoService {
@@ -47,11 +51,6 @@ public class ToDoService {
         return this.toDoRepository.deleteByIdAndUserModel(id,user);
     }
 
-    public List<ToDoResponse> getAllByUserModel(UserModel userModel) {
-        List<ToDoModel> toDoModels = this.toDoRepository.getAllByUserModel(userModel);
-        return toDoModels.stream().map(todo -> modelMapper.map(todo,ToDoResponse.class)).toList();
-    }
-
     public ToDoResponse getToDoByIdAndUserModel(Long id, UserModel userModel){
 
         Optional<ToDoModel> toDoModel = this.toDoRepository.getToDoByIdAndUserModel(id,userModel);
@@ -73,11 +72,28 @@ public class ToDoService {
         return modelMapper.map(todoUpdated, ToDoResponse.class);
     }
 
-   public Page<ToDoResponse> getAllByUserModel(UserModel userModel, Pageable pageable){
+   public List<ToDoResponse> getAllByUserModel(UserModel userModel, Pageable pageable){
        PageRequest pages = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
        Page<ToDoModel> todos = toDoRepository.getAllByUserModel(userModel,pages);
-       return todos.map(todo->modelMapper.map(todo,ToDoResponse.class));
-
+       return todos.stream()
+               .map(todo->modelMapper.map(todo,ToDoResponse.class))
+               .collect(Collectors.toList());
    }
 
+    public List<ToDoResponse> getAllByUserModel(UserModel userModel) { //LIST
+        List<ToDoModel> toDoModels = this.toDoRepository.getAllByUserModel(userModel);
+        return toDoModels.stream().map(todo -> modelMapper.map(todo,ToDoResponse.class)).toList();
+    }
+
+    public List<ToDoResponse> getAllByUserModelNoExpired(UserModel userModel, Pageable pageable) {
+       /* return this.getAllByUserModel(userModel, pageable)
+                .stream()
+                .filter(t -> t.getExpiryDate().isAfter(LocalDate.now()))
+                .collect(Collectors.toList());  PRIMA SOLUZIONE*/
+
+        return this.toDoRepository.getAllByUserModelAndExpiryDateAfter(userModel, pageable, LocalDate.now())
+                .stream()
+                .map(todo -> modelMapper.map(todo,ToDoResponse.class))
+                .toList();
+    }
 }

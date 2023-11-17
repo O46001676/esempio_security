@@ -1,8 +1,11 @@
 package esempio_security.esempio_security.config;
 
 import esempio_security.esempio_security.auth.JwtAuthenticationFilter;
+import static esempio_security.esempio_security.enums.Permission.*;
+import static esempio_security.esempio_security.enums.Role.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -12,6 +15,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+
 
 @Configuration
 @EnableWebSecurity
@@ -29,7 +34,7 @@ public class SecurityConfiguration {
     //metodo che permette di defire quali permessi applicare in base all'indirizzo di riferimento
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.cors(Customizer.withDefaults())
+        return http
                 .authorizeHttpRequests(authorizeConfig->
                 authorizeConfig.requestMatchers("/public")
                         .permitAll()
@@ -37,6 +42,16 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers("/error")
                         .permitAll()
+
+                        .requestMatchers("/prova/user/**")
+                        .hasAnyRole(USER.name(), ADMIN.name())
+
+                        .requestMatchers(HttpMethod.GET, "/prova/user/**")
+                        .hasAnyAuthority(ADMIN_READ.name(), USER_READ.name())
+ 
+                        .requestMatchers(HttpMethod.GET, "/prova/admin/**")
+                        .hasAuthority(ADMIN_READ.name())
+
                         .anyRequest()
                         .authenticated()
         )

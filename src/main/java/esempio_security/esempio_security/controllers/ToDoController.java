@@ -7,6 +7,7 @@ import esempio_security.esempio_security.models.ToDoModel;
 import esempio_security.esempio_security.models.UserModel;
 import esempio_security.esempio_security.services.ToDoService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,7 +33,7 @@ public class ToDoController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getToDos(
+    public ResponseEntity<?> getToDosByUserModel(
             UsernamePasswordAuthenticationToken user,
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "expiryDate", direction = Sort.Direction.ASC)
@@ -40,9 +41,8 @@ public class ToDoController {
             ) Pageable pageable) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
-            Page<ToDoResponse> toDos = this.toDoService.getAllByUserModel(userModel,pageable);
-            List<ToDoResponse> response = toDos.stream().toList();
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            List<ToDoResponse> toDos = this.toDoService.getAllByUserModel(userModel, pageable);
+            return new ResponseEntity<>(toDos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -55,16 +55,15 @@ public class ToDoController {
 
     @PostMapping
     public ResponseEntity<?> addToDo(@Valid @RequestBody ToDoRequest toDo,
-                                               UsernamePasswordAuthenticationToken user) {
+                                     UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         try {
             ToDoResponse toDoAdded = this.toDoService.addToDo(toDo, userModel);
             return new ResponseEntity<>(toDoAdded, HttpStatus.CREATED);
 
-        }catch (HttpMessageNotReadableException e){
+        } catch (HttpMessageNotReadableException e) {
             return new ResponseEntity<>("Data non valida", HttpStatus.I_AM_A_TEAPOT);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -74,9 +73,9 @@ public class ToDoController {
     public ResponseEntity<?> removeToDo(@Valid @PathVariable Long id, UsernamePasswordAuthenticationToken user) {
         UserModel userModel = (UserModel) user.getPrincipal();
         int nRowDeleted = this.toDoService.deleteByIdAndUserModel(id, userModel);
-        if(nRowDeleted == 1){
+        if (nRowDeleted == 1) {
             return new ResponseEntity<>("Todo eliminato con successo!", HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<>("Todo non trovato!", HttpStatus.BAD_REQUEST);
         }
 
@@ -92,7 +91,7 @@ public class ToDoController {
 
     @PutMapping
     public ResponseEntity<?> updateToDo(@Valid @RequestBody ToDoRequestUpdate toDo,
-                                                UsernamePasswordAuthenticationToken user) {
+                                        UsernamePasswordAuthenticationToken user) {
         try {
             UserModel userModel = (UserModel) user.getPrincipal();
             ToDoResponse toDoAdded = this.toDoService.updateToDo(toDo, userModel);
@@ -101,4 +100,21 @@ public class ToDoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getallnoexpired")
+    public ResponseEntity<?> getAllNoExpired(UsernamePasswordAuthenticationToken user,
+                                             @SortDefault.SortDefaults({
+                                                     @SortDefault(sort = "expiryDate",
+                                                             direction = Sort.Direction.ASC)
+                                                }
+                                                ) Pageable pageable) {
+        return ResponseEntity.ok(toDoService.getAllByUserModelNoExpired((UserModel) user.getPrincipal(), pageable));
+    }
+
+    @GetMapping("/whatcontains/upat")
+    public ResponseEntity<?> getWhatContainsUPAT(UsernamePasswordAuthenticationToken user) {
+        return ResponseEntity.ok(user);
+    }
+
+
 }
